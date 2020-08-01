@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>roulette</title>
+    <style type="text/css">
+        body,table{
+            margin:0 auto;
+            text-align:center;
+            width:50%;
+            background-color:white;
+        }
+        table{
+        border: solid 2px ;
+        border-collapse: collapse;
+        margin-top: 40px;
+        }
+         tr, td {
+        border: solid 1px ;
+        }
+        td{
+        padding: 20px;
+        margin: 0;
+        }
+        button {
+            margin-top: 20px;
+            background-color: aqua;
+            border-radius: 3px;
+            font-size:20px;
+        }
+    </style>
+    <script src="jquery-3.5.1.min.js"></script>
+    <script>
+      var interval_id;
+      var number=0;
+      var array=new Array();
+    //   ルーレット作成
+      function make_roulette(){
+          for(let i=0;i<4;i++){
+              $('#roulette table').append('<tr></tr>');
+              for(let j=0;j<4;j++){
+                  let td=(i*4)+(j+1);
+                  array.push(td);
+                  $('#roulette table tr:last').append('<td id="td'+td+'">'+td+'</td>');
+              }
+          }
+          $('#stop').attr("disabled","disabled");
+      }
+    //   ルーレット開始
+      function start_roulette(){
+          interval_id=setInterval(count_roulette,50);
+          $('#start').attr("disabled","disabled");
+          $('#stop').removeAttr("disabled");
+      }
+    //   ルーレットの動き
+      function count_roulette(){
+          $('#td'+array[number]).css('background-color','white');
+          number=Math.floor(Math.random()*array.length);
+          $('#td'+array[number]).css('background-color','#FF4F50');
+          
+      }
+    //   ルーレット停止
+      function stop_roulette(){
+          clearInterval(interval_id);
+          $('#td'+array[number]).css('background-color','#87CEEB');
+          array.splice(number,1);
+          $('#stop').attr("disabled","disabled");
+          $('#start').removeAttr("disabled");
+          if(array.length===0){
+              $('#start').attr("disabled","disabled");
+          }
+      }
+    //   ルーレットリセット
+      function reset_roulette(){
+          clearInterval(interval_id);
+          $('#start').removeAttr("disabled");
+          $('#stop').removeAttr("disabled");
+          $('#roulette table').empty();
+          array=[];
+          make_roulette();
+          
+      }
+    
+    // イベント発生
+    
+       $(function (){
+           make_roulette();
+           $('#start').click(start_roulette);
+           $('#stop').click(stop_roulette);
+           $('#reset').click(reset_roulette);
+       });
+    </script>
+</head>
+<body>
+　<div id="roulette">
+    <table>
+    </table>
+  
+  <button id="start">start</button>
+  <button id="stop">stop</button>
+  <button id="reset">reset</button>
+  </div>
+  
+</body>
+</html>
